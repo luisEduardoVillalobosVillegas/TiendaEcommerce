@@ -1,2 +1,2 @@
 # TiendaEcommerce
-tienda programada con .net10
+tienda programada con .net9
