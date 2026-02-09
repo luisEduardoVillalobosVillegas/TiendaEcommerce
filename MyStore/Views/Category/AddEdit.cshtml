@@ -1,0 +1,50 @@
+﻿@*
+    se mantiene el nombre del metodo de CategoryController AddEdit, get y post
+*@
+@**@
+@model CategoryVM
+@{
+    var title = Model.CategoryId == 0? "New Category" : "Edit Category";
+    var btnAction = Model.CategoryId == 0? "Add" : "Save";
+}
+
+
+<div class="row">
+    <div class="col-6">
+        <h2>@title</h2>
+        <hr />
+        @*aca trabajamos con todos los campos para agregar una categoria, en action="/Category/AddEdit [post]le decimos que vaya
+        al metodo de  categoryController
+        *@
+
+        <form action="/Category/AddEdit" method="post">
+            @*como el metodo del controller recibe la entidad VM aprobechamos de obtener el Id*@
+            <input type="hidden" asp-for="CategoryId" />
+            @*agrego diseño al formulario copiando y pegando desde bootstrap 5 form*@
+            <div class="mb-3">
+                <label class="form-label">Name</label>
+                @*se necesita decir que este input va a trabajar con una propiedad del viewmodel con asp-for="Name"*@
+                <input type="text" class="form-control" asp-for="Name" autocomplete="off">
+                <span asp-validation-for="Name" class="text-danger"></span>
+
+            </div>
+            @*aca recibimos el mensaje enviado desde CategoryController del metodo AddEdit post*@
+            @if (ViewBag.message != null)
+            {
+                @*alerta copy paste desde bootstrap*@
+                <div class="alert alert-success" role="alert">
+                    @ViewBag.message
+                </div>
+            }
+            @*aca el div para guardar y otro para volver, esto class="d-grid gap-2 d-md-block mt-4" es para que los botones esten en paralelo, 
+                de tipo submit para que pueda enviar la info al metodo
+            *@
+            <div class="d-grid gap-2 d-md-block mt-4">
+                <button class="btn btn-primary" type="submit">@btnAction</button>
+                <a href="/Category/Index" class="btn btn-warning">Back </a>
+            </div>
+
+        </form>
+    </div>
+
+</div>

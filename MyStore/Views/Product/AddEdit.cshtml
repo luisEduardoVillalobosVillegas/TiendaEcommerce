@@ -1,0 +1,118 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model ProductVM
+@{
+    var title = Model.ProductId == 0 ? "Nuevo Producto" : "Editar Producto";
+    var btnAction = Model.ProductId == 0 ? "Agregar" : "Guardar";
+}
+
+
+<div class="row">
+    <h2>@title</h2>
+    <hr />
+    <div class="col-6">
+        @*aca trabajamos con todos los campos para agregar una producto, en action="/Product/AddEdit [post]le decimos que vaya
+        al metodo de  ProductController
+        ademas en la siguiente linea agregamos al formulario un enctype="multipart/form-data para decirle que se guardara una imagen
+        *@
+
+        <form action="/Product/AddEdit" method="post" enctype="multipart/form-data">
+            @*como el metodo del controller recibe la entidad VM aprobechamos de obtener el Id*@
+            <input type="hidden" asp-for="ProductId" />
+
+            @*agregamos todas las categorias en un combobox*@
+            <div class="mb-3">
+                <label class="form-label">Category</label>
+                <select class="form-select" asp-for="Category.CategoryId" asp-items="@Model.Categories">
+                    <option selected disabled>--Seleccionar--</option>
+                </select>
+            </div>
+            @*agrego diseño al formulario copiando y pegando desde bootstrap 5 form*@
+            <div class="mb-3">
+                <label class="form-label">Nombre</label>
+                @*se necesita decir que este input va a trabajar con una propiedad del viewmodel con asp-for="Name"*@
+                <input type="text" class="form-control" asp-for="Name" autocomplete="off">
+                <span asp-validation-for="Name" class="text-danger"></span>
+
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Descripcion</label>
+               
+                <textarea id="summernote" class="form-control" asp-for="Description" autocomplete="off"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Precio</label>
+                
+                <input type="text" class="form-control" asp-for="Price" autocomplete="off">
+                <span asp-validation-for="Price" class="text-danger"></span>
+
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Stock</label>
+                
+                <input type="number" class="form-control" asp-for="Stock" autocomplete="off">
+                <span asp-validation-for="Stock" class="text-danger"></span>
+
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Subir Imagen</label>
+               
+                <input type="file" class="form-control" asp-for="ImageFile" autocomplete="off">
+               
+                
+
+            </div>
+            @*aca recibimos el mensaje enviado desde CategoryController del metodo AddEdit post*@
+            @if (ViewBag.message != null)
+            {
+                @*alerta copy paste desde bootstrap*@
+                <div class="alert alert-success" role="alert">
+                    @ViewBag.message
+                </div>
+            }
+            @*aca el div para guardar y otro para volver, esto class="d-grid gap-2 d-md-block mt-4" es para que los botones esten en paralelo, 
+                de tipo submit para que pueda enviar la info al metodo
+            *@
+            <div class="d-grid gap-2 d-md-block mt-4">
+                <button class="btn btn-primary" type="submit">@btnAction</button>
+                <a href="/Product/Index" class="btn btn-warning">Atras </a>
+            </div>
+
+        </form>
+    </div>
+    @*siguiente columna para mostrar la imagen*@
+    <div class="col-6">
+
+            <img src="~/images/@Model.ImageName" class="rounded" width="300" height="320" alt="@Model.Name"/>
+        
+    </div>
+@*     <div class="col-6">
+
+        <img src="~/images/@(string.IsNullOrEmpty(Model.ImageName)
+                                                                     ? "noImage.jpg"
+                                                                     : Model.ImageName)" class="rounded" width="300" height="320" alt="Imagen" loading="lazy" referrerpolicy="no-referrer" />
+
+    </div> *@
+</div>
+@section Styles {
+    <link href="~/lib/summernote/dist/summernote.min.css" rel="stylesheet" />
+    <link href="~/lib/summernote/dist/summernote-bs5.min.css" rel="stylesheet" />
+
+}
+
+@section Scripts {
+    <script src="~/lib/summernote/dist/summernote.min.js"></script>
+    <script src="~/lib/summernote/dist/summernote-bs5.min.js"></script>
+
+    <script>
+          $(document).ready(function() {
+          $('#summernote').summernote();
+        });
+
+    </script>
+}
